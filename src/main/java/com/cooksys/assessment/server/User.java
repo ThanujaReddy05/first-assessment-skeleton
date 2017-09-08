@@ -9,13 +9,15 @@ import java.util.List;
 
 /**
  * @author ftd-11
+ * 
+ * class to maintain user details 
  *
  */
 public class User {
 
 	private String userName;
 	private Socket port;
-	private String ipAddress;
+	private String host;
 	
 	private static List<User> listOfUsers = new ArrayList();
 	
@@ -30,14 +32,14 @@ public class User {
 	 * @param listOfUsers the listOfUsers to set
 	 */
 	public void setListOfUsers(List<User> listOfUsers) {
-		this.listOfUsers = listOfUsers;
+		User.listOfUsers = listOfUsers;
 	}
 
 	public User(String userName, Socket port, String ipAddress) {
 		
 		this.userName = userName;
 		this.port = port;
-		this.ipAddress = ipAddress;
+		this.host = ipAddress;
 	}
 
 	/**
@@ -72,14 +74,14 @@ public class User {
 	 * @return the ipAddress
 	 */
 	public String getIpAddress() {
-		return ipAddress;
+		return host;
 	}
 
 	/**
 	 * @param ipAddress the ipAddress to set
 	 */
 	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
+		this.host = ipAddress;
 	}
 	
 	

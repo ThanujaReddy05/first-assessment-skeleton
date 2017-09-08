@@ -23,15 +23,18 @@ cli
     clientHost = args.host 
     clientPort = args.port
     
+    //connect to server with localhost and 8080 if it is not provided with connect command
     server = connect({ host: (clientHost === undefined)? 'localhost' : clientHost, 
                        port:(clientPort === undefined)? 8080 : clientPort }, () => {
-                         
+
       server.write(new Message({ username, command:'connect' }).toJSON() + '\n')
       callback()
     })
 
 
     server.on('data', (buffer) => {
+
+      //Set color to each command
       if(Message.fromJSON(buffer).command === 'connect') 
         this.log(cli.chalk['blue'](Message.fromJSON(buffer).toString()))
 
@@ -48,7 +51,7 @@ cli
         this.log(cli.chalk['magenta'](Message.fromJSON(buffer).toString()))
 
       if(Message.fromJSON(buffer).command === 'disconnect') 
-        this.log(cli.chalk['blue'](Message.fromJSON(buffer).toString()))
+        this.log(cli.chalk['gray'](Message.fromJSON(buffer).toString()))
     })
 
     server.on('end', () => {
@@ -58,31 +61,38 @@ cli
 
 
   .action(function (input, callback) {
-    const [ command, ...rest ] = words(input, /\S+/g)
+    const [ command, ...rest ] = words(input, /\S+/g) //Regular expression to read @ symbol from input
     const contents = rest.join(' ')
     sessionContents = command + ' ' + contents
 
     if (command.includes('@') ) {
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
+        //set same command untill different command is entered
         session = command
+        this.delimiter(cli.chalk['green']('<Whisper>'))
 
     } else if (command === 'echo') {
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
+        //set same command untill different command is entered
         session = command
+        this.delimiter(cli.chalk['green']('<echo>'))
           
     }  
       else if (command === 'broadcast') {
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
+        //set same command untill different command is entered
         session = command
+        this.delimiter(cli.chalk['green']('<Broadcast>'))
     } 
 
       else if  (command === 'disconnect') {
         server.end(new Message({ username, command }).toJSON() + '\n')
+        this.delimiter(cli.chalk['green']('<Disconnected>'))
     } 
 
       else if (command === 'users') {
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
-
+        this.delimiter(cli.chalk['green']('<Users>'))
     } 
       
       else if (session === 'echo' || session === 'broadcast' ||  session.includes('@'))  {
