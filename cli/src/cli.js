@@ -9,17 +9,24 @@ let username
 let server
 let session =  " "
 let sessionContents
+let clientPort
+let clientHost
 
 cli
   .delimiter(cli.chalk['yellow']('ftd~$'))
 
 cli
-  .mode('connect <username>')
+  .mode('connect <username> [host] [port]')
   .delimiter(cli.chalk['green']('connected>'))
   .init(function (args, callback) {
     username = args.username
-    server = connect({ host: 'localhost', port: 8080 }, () => {
-      server.write(new Message({ username, command: 'connect' }).toJSON() + '\n')
+    clientHost = args.host 
+    clientPort = args.port
+    
+    server = connect({ host: (clientHost === undefined)? 'localhost' : clientHost, 
+                       port:(clientPort === undefined)? 8080 : clientPort }, () => {
+                         
+      server.write(new Message({ username, command:'connect' }).toJSON() + '\n')
       callback()
     })
 
@@ -35,7 +42,7 @@ cli
         this.log(cli.chalk['green'](Message.fromJSON(buffer).toString()))
 
       if(Message.fromJSON(buffer).command.includes('@') )
-        this.log(cli.chalk['red'](Message.fromJSON(buffer).toString()))
+        this.log(cli.chalk['cyan'](Message.fromJSON(buffer).toString()))
 
       if(Message.fromJSON(buffer).command === 'users' ) 
         this.log(cli.chalk['magenta'](Message.fromJSON(buffer).toString()))
@@ -51,7 +58,7 @@ cli
 
 
   .action(function (input, callback) {
-    const [ command, ...rest ] = words(input)
+    const [ command, ...rest ] = words(input, /\S+/g)
     const contents = rest.join(' ')
     sessionContents = command + ' ' + contents
 
