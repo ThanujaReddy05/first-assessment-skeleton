@@ -17,7 +17,7 @@ cli
 
 cli
   .mode('connect <username> [host] [port]')
-  .delimiter(cli.chalk['green']('connected>'))
+  .delimiter(' ')
   .init(function (args, callback) {
     username = args.username
     clientHost = args.host 
@@ -48,7 +48,7 @@ cli
         this.log(cli.chalk['cyan'](Message.fromJSON(buffer).toString()))
 
       if(Message.fromJSON(buffer).command === 'users' ) 
-        this.log(cli.chalk['magenta'](Message.fromJSON(buffer).toString()))
+        this.log(cli.chalk['magenta'] (Message.fromJSON(buffer).toString()))
 
       if(Message.fromJSON(buffer).command === 'disconnect') 
         this.log(cli.chalk['gray'](Message.fromJSON(buffer).toString()))
@@ -65,12 +65,13 @@ cli
     const contents = rest.join(' ')
     sessionContents = command + ' ' + contents
 
-    if (command.includes('@') ) {
+    if (command.includes('@')  ) {
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         //set same command untill different command is entered
         session = command
         this.delimiter(cli.chalk['green']('<Whisper>'))
 
+    
     } else if (command === 'echo') {
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         //set same command untill different command is entered
@@ -85,7 +86,7 @@ cli
         this.delimiter(cli.chalk['green']('<Broadcast>'))
     } 
 
-      else if  (command === 'disconnect') {
+      else if  ((command === 'disconnect') ){
         server.end(new Message({ username, command }).toJSON() + '\n')
         this.delimiter(cli.chalk['green']('<Disconnected>'))
     } 

@@ -19,21 +19,8 @@ public class User {
 	private Socket port;
 	private String host;
 	
-	private static List<User> listOfUsers = new ArrayList();
-	
-	/**
-	 * @return the listOfUsers
-	 */
-	public static List<User> getListOfUsers() {
-		return listOfUsers;
-	}
 
-	/**
-	 * @param listOfUsers the listOfUsers to set
-	 */
-	public void setListOfUsers(List<User> listOfUsers) {
-		User.listOfUsers = listOfUsers;
-	}
+	
 
 	public User(String userName, Socket port, String ipAddress) {
 		
